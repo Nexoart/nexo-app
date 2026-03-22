@@ -1,20 +1,55 @@
 package com.example.nexoapp
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.widget.Button
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import com.example.nexoapp.network.LoginRequest
+import com.example.nexoapp.network.LoginResponse
+import com.example.nexoapp.network.RetrofitClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+
+        // Referenciando os elementos do seu XML
+        val etEmail = findViewById<EditText>(R.id.etEmail)
+        val etPassword = findViewById<EditText>(R.id.etPassword)
+        val btnLogin = findViewById<Button>(R.id.btnLogin)
+
+        btnLogin.setOnClickListener {
+            val email = etEmail.text.toString()
+            val senha = etPassword.text.toString()
+
+            if (email.isEmpty() || senha.isEmpty()) {
+                Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Chamando a "ponte" com o backend do Lucas
+            val loginRequest = LoginRequest(email, senha)
+
+            RetrofitClient.instance.login(loginRequest).enqueue(object : Callback<LoginResponse> {
+                override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                    if (response.isSuccessful) {
+                        val token = response.body()?.token
+                        Toast.makeText(this@MainActivity, "Login Sucesso! Token: $token", Toast.LENGTH_LONG).show()
+                        // Aqui você navegaria para a próxima tela do Nexo Art
+                    } else {
+                        Toast.makeText(this@MainActivity, "Erro: Usuário ou senha inválidos", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
+                    Toast.makeText(this@MainActivity, "Falha na conexão: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
         }
     }
 }
