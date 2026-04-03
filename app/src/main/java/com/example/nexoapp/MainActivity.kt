@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
             // Chamando a "ponte" com o backend do Lucas
             val loginRequest = LoginRequest(email, senha)
 
-            RetrofitClient.instance.login(loginRequest).enqueue(object : Callback<LoginResponse> {
+            RetrofitClient.apiService.login(loginRequest).enqueue(object : Callback<LoginResponse> {
                 override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                     if (response.isSuccessful) {
                         val token = response.body()?.token

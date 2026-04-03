@@ -4,6 +4,5 @@ package com.example.nexoapp.network // Ajuste se o pacote for diferente
 data class RegisterRequest(
     val name: String,
     val email: String,
-    val password: String,
-    val alias: String // O "vulgo" do artista
+    val password: String,val alias: String
 )
