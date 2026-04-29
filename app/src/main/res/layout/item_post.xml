@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#0D0D0D"
+    android:paddingTop="12dp">
+
+    <!-- Profile Picture (Circular via CardView) -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardProfileImage"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="16dp"
+        app:cardCornerRadius="22dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="#333333"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imgProfile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            tools:ignore="ContentDescription"
+            tools:src="@tools:sample/avatars" />
+    </androidx.cardview.widget.CardView>
+
+    <!-- Artist Name (Vulgo) -->
+    <TextView
+        android:id="@+id/tvArtistName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
+        app:layout_constraintStart_toEndOf="@id/cardProfileImage"
+        app:layout_constraintTop_toTopOf="@id/cardProfileImage"
+        tools:text="artwins" />
+
+    <!-- Username and Time -->
+    <TextView
+        android:id="@+id/tvUsernameTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#A0A0A0"
+        android:textSize="13sp"
+        android:layout_marginTop="2dp"
+        app:layout_constraintStart_toStartOf="@id/tvArtistName"
+        app:layout_constraintTop_toBottomOf="@id/tvArtistName"
+        tools:text="\@artwins • 5hr" />
+
+    <!-- Options Icon (Três pontinhos) -->
+    <ImageView
+        android:id="@+id/imgOptions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:padding="8dp"
+        app:tint="#A0A0A0"
+        app:layout_constraintBottom_toBottomOf="@id/cardProfileImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/cardProfileImage"
+        tools:ignore="ContentDescription"
+        android:src="@android:drawable/ic_menu_more" />
+
+    <!-- Post Text / Caption -->
+    <TextView
+        android:id="@+id/tvPostCaption"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardProfileImage"
+        tools:text="crimson" />
+
+    <!-- Post Image Container (Rounded Corners) -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardPostImage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="#222222"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvPostCaption">
+
+        <ImageView
+            android:id="@+id/imgPost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            tools:ignore="ContentDescription"
+            tools:src="@tools:sample/backgrounds/scenic" />
+    </androidx.cardview.widget.CardView>
+
+    <!-- Bottom Action Bar (Interactions) -->
+    <LinearLayout
+        android:id="@+id/layoutInteractions"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:baselineAligned="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardPostImage">
+
+        <!-- Comment -->
+        <LinearLayout
+            android:id="@+id/btnComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                app:tint="#A0A0A0"
+                android:src="@android:drawable/ic_menu_edit"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/tvCommentCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:textColor="#A0A0A0"
+                android:textSize="14sp"
+                tools:text="1" />
+        </LinearLayout>
+
+        <!-- Spacer -->
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <!-- Repost -->
+        <LinearLayout
+            android:id="@+id/btnRepost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                app:tint="#A0A0A0"
+                android:src="@android:drawable/ic_menu_revert"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <!-- Like -->
+        <LinearLayout
+            android:id="@+id/btnLike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                app:tint="#A0A0A0"
+                android:src="@android:drawable/ic_menu_gallery"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/tvLikeCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:textColor="#A0A0A0"
+                android:textSize="14sp"
+                tools:text="89" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <!-- Bookmark -->
+        <LinearLayout
+            android:id="@+id/btnBookmark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                app:tint="#A0A0A0"
+                android:src="@android:drawable/ic_menu_save"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <!-- Share -->
+        <LinearLayout
+            android:id="@+id/btnShare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                app:tint="#A0A0A0"
+                android:src="@android:drawable/ic_menu_share"
+                tools:ignore="ContentDescription" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Post Divider -->
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:background="#1A1A1A"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutInteractions" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
