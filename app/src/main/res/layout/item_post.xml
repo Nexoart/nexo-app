@@ -179,7 +179,7 @@
 
         <!-- Like -->
         <LinearLayout
-            android:id="@+id/btnLike"
+            android:id="@+id/layoutLike"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -187,10 +187,11 @@
             android:padding="8dp">
 
             <ImageView
+                android:id="@+id/btnLike"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 app:tint="#A0A0A0"
-                android:src="@android:drawable/ic_menu_gallery"
+                android:src="@drawable/ic_favorite_border"
                 tools:ignore="ContentDescription" />
 
             <TextView

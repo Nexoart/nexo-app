@@ -12,6 +12,11 @@
         android:title="Descobrir" />
 
     <item
+        android:id="@+id/nav_messages"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:title="Mensagens" />
+
+    <item
         android:id="@+id/nav_profile"
         android:icon="@drawable/ic_launcher_foreground"
         android:title="Perfil" />

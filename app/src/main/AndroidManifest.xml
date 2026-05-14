@@ -10,6 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Nexoapp">
+        <activity android:name=".ChatFakeActivity" />
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
@@ -24,6 +25,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity 
+            android:name=".OnboardingActivity"
+            android:exported="false" />
+        <activity 
+            android:name=".NewPostActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

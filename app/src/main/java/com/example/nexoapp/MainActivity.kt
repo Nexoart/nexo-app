@@ -37,7 +37,9 @@ class MainActivity : AppCompatActivity() {
             // 2. O seu "Caminho de Emergência" (Login Fake para a Cilene ver)
             if (email == "admin@nexo.com" && senha == "1234") {
                 Toast.makeText(this, "Acesso Liberado (Modo Demo)", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this, HomeActivity::class.java)
+
+                // MUDANÇA AQUI: Vai para o Onboarding em vez da Home
+                val intent = Intent(this, OnboardingActivity::class.java)
                 startActivity(intent)
                 finish()
                 return@setOnClickListener // Para o código parar aqui e não tentar o Retrofit
@@ -50,13 +52,10 @@ class MainActivity : AppCompatActivity() {
                     if (response.isSuccessful) {
                         val token = response.body()?.token
                         Toast.makeText(this@MainActivity, "Login Sucesso! Token: $token", Toast.LENGTH_LONG).show()
-                        // 1. Prepara o envelope (De onde estou, Para onde vou)
-                        val intent = Intent(this@MainActivity, HomeActivity::class.java)
 
-// 2. Envia o envelope para o sistema operacional
+                        // MUDANÇA AQUI: Vai para o Onboarding em vez da Home
+                        val intent = Intent(this@MainActivity, OnboardingActivity::class.java)
                         startActivity(intent)
-
-// 3. Destrói a tela de login (para o usuário não conseguir 'voltar' pra ela)
                         finish()
                     } else {
                         Toast.makeText(this@MainActivity, "Erro: Usuário ou senha inválidos", Toast.LENGTH_SHORT).show()

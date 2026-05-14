@@ -1,11 +1,9 @@
 package com.example.nexoapp
 
-import Post
-import PostAdapter
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class HomeActivity : AppCompatActivity() {
 
@@ -13,19 +11,42 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewFeed)
+        val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottomNavigation)
 
-        // O RecyclerView precisa saber como rolar a tela (de cima para baixo)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        bottomNavigation.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    substituirFragment(HomeFragment())
+                    true
+                }
+                R.id.nav_discover -> {
+                    substituirFragment(SearchFragment())
+                    true
+                }
+                R.id.nav_messages -> { // <-- ADICIONAMOS O NOVO BOTÃO AQUI
+                    substituirFragment(MessagesFragment())
+                    true
+                }
+                R.id.nav_profile -> {
+                    substituirFragment(ProfileFragment())
+                    true
+                }
+                else -> false
+            }
+        }
 
-        //  lista falsa para teste
-        val listaFalsa = listOf(
-            Post("flip", "@filipe_arts • 2hr", "Estudando anatomia hoje!", R.drawable.anatomia, R.drawable.test ),
-            Post("PH", "@rafilskz • 5hr", "Primeiro teste do feed rolando solto!", R.drawable.marcy, R.drawable.luz),
-            Post("Cilene", "@prof_cilene • 1d", "Outro teste do feed rolando solto!", R.drawable.florest, R.drawable.eda)
-        )
 
-        // Ligando o Adapter ao RecyclerView
-        recyclerView.adapter = PostAdapter(listaFalsa)
+
+        // Carrega a Home logo ao abrir
+        if (savedInstanceState == null) {
+            substituirFragment(HomeFragment())
+        }
+    }
+
+    // Função agora fora do onCreate, como uma função da classe
+    private fun substituirFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, fragment)
+            .commit()
     }
 }
