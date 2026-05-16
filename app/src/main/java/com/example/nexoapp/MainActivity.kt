@@ -2,8 +2,8 @@ package com.example.nexoapp
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.nexoapp.network.LoginRequest
@@ -22,7 +22,13 @@ class MainActivity : AppCompatActivity() {
         // Referenciando os elementos do seu XML
         val etEmail = findViewById<EditText>(R.id.etEmail)
         val etPassword = findViewById<EditText>(R.id.etPassword)
-        val btnLogin = findViewById<Button>(R.id.btnLogin)
+        val btnLogin = findViewById<com.google.android.material.button.MaterialButton>(R.id.btnLogin)
+        val tvGoToRegister = findViewById<TextView>(R.id.tvGoToRegister)
+
+        tvGoToRegister.setOnClickListener {
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+        }
 
         btnLogin.setOnClickListener {
             val email = etEmail.text.toString()

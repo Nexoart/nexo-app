@@ -4,74 +4,139 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#121212"
+    android:background="#080808"
     android:padding="24dp">
 
+    <!-- Ícone ou logo no topo -->
+    <ImageView
+        android:id="@+id/imgLogoPlaceholder"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="60dp"
+        android:src="@android:drawable/ic_menu_gallery"
+        app:tint="#1B5E20"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Título principal -->
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="NEXO ART"
-        android:textColor="#E9E4F0"
-        android:textSize="32sp"
+        android:text="Nexo Art"
+        android:textColor="#FFFFFF"
+        android:textSize="36sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/imgLogoPlaceholder"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="80dp" />
-
-    <EditText
-        android:id="@+id/etEmail"
-        android:layout_width="0dp"
-        android:layout_height="55dp"
-        android:hint="Email do Artista"
-        android:textColorHint="#888888"
-        android:textColor="#000000"
-        android:background="@android:drawable/editbox_background_normal"
-        android:padding="12dp"
-        android:inputType="textEmailAddress"
+        app:layout_constraintEnd_toEndOf="parent" />
+        
+    <!-- Subtítulo charmoso -->
+    <TextView
+        android:id="@+id/tvSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Conecte-se com a arte do futuro"
+        android:textColor="#888888"
+        android:textSize="14sp"
+        android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@id/tvTitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="60dp" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <EditText
-        android:id="@+id/etPassword"
-        android:layout_width="0dp"
-        android:layout_height="55dp"
-        android:hint="Senha"
-        android:textColorHint="#888888"
-        android:textColor="#000000"
-        android:background="@android:drawable/editbox_background_normal"
-        android:padding="12dp"
-        android:inputType="textPassword"
-        app:layout_constraintTop_toBottomOf="@id/etEmail"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
-
-    <Button
-        android:id="@+id/btnLogin"
+    <!-- Campo Email -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardEmail"
         android:layout_width="0dp"
         android:layout_height="60dp"
-        android:text="ENTRAR NA REDE"
-        android:backgroundTint="#608358"
-        android:textColor="#000000"
-        android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/etPassword"
+        android:layout_marginTop="48dp"
+        app:cardBackgroundColor="#1A1A1A"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:strokeColor="#333333"
+        app:strokeWidth="1dp"
+        app:layout_constraintTop_toBottomOf="@id/tvSubtitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="32dp" />
+        app:layout_constraintEnd_toEndOf="parent">
 
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:hint="Email"
+            android:textColorHint="#888888"
+            android:textColor="#FFFFFF"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:drawableStart="@android:drawable/ic_dialog_email"
+            android:drawablePadding="12dp"
+            android:drawableTint="#888888"
+            android:inputType="textEmailAddress"
+            android:maxLines="1" />
+    </androidx.cardview.widget.CardView>
+
+    <!-- Campo Senha -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardPassword"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="16dp"
+        app:cardBackgroundColor="#1A1A1A"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:strokeColor="#333333"
+        app:strokeWidth="1dp"
+        app:layout_constraintTop_toBottomOf="@id/cardEmail"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:hint="Senha"
+            android:textColorHint="#888888"
+            android:textColor="#FFFFFF"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:drawableStart="@android:drawable/ic_lock_idle_lock"
+            android:drawablePadding="12dp"
+            android:drawableTint="#888888"
+            android:inputType="textPassword"
+            android:maxLines="1" />
+    </androidx.cardview.widget.CardView>
+
+    <!-- Botão Entrar -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnLogin"
+        android:layout_width="0dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="32dp"
+        android:text="Entrar"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:backgroundTint="#1B5E20"
+        app:cornerRadius="32dp"
+        app:layout_constraintTop_toBottomOf="@id/cardPassword"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Texto de Cadastro -->
     <TextView
         android:id="@+id/tvGoToRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Não tem conta? Cadastre-se"
-        android:textColor="#608358"
-        app:layout_constraintTop_toBottomOf="@id/btnLogin"
+        android:textColor="#AAAAAA"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp" />
+        android:layout_marginBottom="32dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
