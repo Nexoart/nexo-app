@@ -48,4 +48,6 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     // Converter o JSON do Spring Boot em objetos Kotlin
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    // Glide para carregar imagens da URL
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 }

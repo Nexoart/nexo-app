@@ -53,10 +53,20 @@ class MainActivity : AppCompatActivity() {
 
             // 3. O "Caminho Real" (Retrofit - Só roda se o email não for o admin)
             val loginRequest = LoginRequest(email, senha)
-            RetrofitClient.apiService.login(loginRequest).enqueue(object : Callback<LoginResponse> {
+            RetrofitClient.getApiService(this@MainActivity).login(loginRequest).enqueue(object : Callback<LoginResponse> {
                 override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                     if (response.isSuccessful) {
                         val token = response.body()?.token
+                        
+                        // Salvar o Token no SharedPreferences
+                        if (token != null) {
+                            val sharedPref = getSharedPreferences("NexoAppPrefs", android.content.Context.MODE_PRIVATE)
+                            with (sharedPref.edit()) {
+                                putString("AUTH_TOKEN", token)
+                                apply()
+                            }
+                        }
+
                         Toast.makeText(this@MainActivity, "Login Sucesso! Token: $token", Toast.LENGTH_LONG).show()
 
                         // MUDANÇA AQUI: Vai para o Onboarding em vez da Home

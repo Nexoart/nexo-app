@@ -13,7 +13,11 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        android.widget.Toast.makeText(this, "Tentando conectar ao backend...", android.widget.Toast.LENGTH_LONG).show()
+        android.widget.Toast.makeText(
+            this,
+            "Tentando conectar ao backend...",
+            android.widget.Toast.LENGTH_LONG
+        ).show()
 
         // Rodando o teste assim que a tela abrir
         testarCadastroBackend()
@@ -24,16 +28,17 @@ class RegisterActivity : AppCompatActivity() {
         val fakeUser = RegisterRequest(
             name = "Raphael",
             email = "ph@teste.com",
-            password = "senha-super-segura",
-            alias = "Rafilskz"
+            password = "senha-super-segura"
+            // Removemos o 'alias' para ficar exatamente igual ao DTO do Lucas
         )
 
         // para a internet não travar a tela do celular.
         lifecycleScope.launch {
             try {
-                // Fazendo a chamada para o Spring Boot
-                val response = RetrofitClient.apiService.registerUser(fakeUser)
-
+                // MUDANÇA AQUI: Trocamos apiService por getApiService(this@SuaActivity)
+                // Se esse código estiver dentro de um Fragment, use requireContext() no lugar de this
+                val response =
+                    RetrofitClient.getApiService(this@RegisterActivity).registerUser(fakeUser)
 
                 if (response.isSuccessful) {
                     Log.d("NEXO_API", "✅ Sucesso! Artista salvo no banco!")

@@ -10,7 +10,7 @@ data class Post(
     val artistName: String,
     val usernameTime: String,
     val caption: String,
-    val postImageResId: Int,
+    val postImageUrl: String?, // Atualizado para suportar URL da Cloudinary
     val profileImageResId: Int,
     var isLiked: Boolean = false // <-- PASSO 1: A variável de memória que guarda se o post tem like
 )
@@ -40,7 +40,13 @@ class PostAdapter(private var postList: List<Post>) : RecyclerView.Adapter<PostA
         holder.tvArtistName.text = currentPost.artistName
         holder.tvUsernameTime.text = currentPost.usernameTime
         holder.tvPostCaption.text = currentPost.caption
-        holder.imgPost.setImageResource(currentPost.postImageResId)
+        
+        // Renderizar a imagem usando Glide (com placeholder padrão se a URL falhar ou for vazia)
+        com.bumptech.glide.Glide.with(holder.itemView.context)
+            .load(currentPost.postImageUrl)
+            .placeholder(R.drawable.marcy)
+            .into(holder.imgPost)
+            
         holder.imgProfile.setImageResource(currentPost.profileImageResId)
 
         // --- PASSO 3 (Parte B): LÓGICA DO BOTÃO DE LIKE ---

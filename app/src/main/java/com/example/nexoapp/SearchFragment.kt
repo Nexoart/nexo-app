@@ -27,11 +27,11 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
 
         listaOriginal = listOf(
-            Post("Arte 1", "@rafilskz", "Explosão de cores", R.drawable.marcy, R.drawable.luz),
-            Post("Arte 2", "@filipe_arts", "Estudo de sombras", R.drawable.anatomia, R.drawable.test),
-            Post("Arte 3", "@rafilskz", "Cenário 3D", R.drawable.florest, R.drawable.eda),
-            Post("Pixel Adventure", "@pixel_boy", "Pixel art retro", R.drawable.marcy, R.drawable.eda),
-            Post("Cyber City", "@neo_art", "Cyberpunk vibes", R.drawable.anatomia, R.drawable.test)
+            Post(artistName = "Arte 1", usernameTime = "@rafilskz", caption = "Explosão de cores", postImageUrl = null, profileImageResId = R.drawable.luz),
+            Post(artistName = "Arte 2", usernameTime = "@filipe_arts", caption = "Estudo de sombras", postImageUrl = null, profileImageResId = R.drawable.test),
+            Post(artistName = "Arte 3", usernameTime = "@rafilskz", caption = "Cenário 3D", postImageUrl = null, profileImageResId = R.drawable.eda),
+            Post(artistName = "Pixel Adventure", usernameTime = "@pixel_boy", caption = "Pixel art retro", postImageUrl = null, profileImageResId = R.drawable.eda),
+            Post(artistName = "Cyber City", usernameTime = "@neo_art", caption = "Cyberpunk vibes", postImageUrl = null, profileImageResId = R.drawable.test)
         )
 
         adapter = PostAdapter(listaOriginal)
