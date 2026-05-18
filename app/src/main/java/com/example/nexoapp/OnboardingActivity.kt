@@ -14,8 +14,10 @@ class OnboardingActivity : AppCompatActivity() {
         val buttonEnter = findViewById<MaterialButton>(R.id.buttonEnter)
 
         buttonEnter.setOnClickListener {
-            // Dispara a Intent para abrir a HomeActivity
-            val intent = Intent(this, HomeActivity::class.java)
+            // Dispara a Intent para abrir a EditProfileActivity (Setup Profile)
+            val intent = Intent(this, EditProfileActivity::class.java)
+            // Passa flag para indicar que vem do onboarding
+            intent.putExtra("IS_ONBOARDING", true)
             startActivity(intent)
             
             // Impede que o usuário volte para o Onboarding

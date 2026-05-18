@@ -44,8 +44,8 @@ class MainActivity : AppCompatActivity() {
             if (email == "admin@nexo.com" && senha == "1234") {
                 Toast.makeText(this, "Acesso Liberado (Modo Demo)", Toast.LENGTH_SHORT).show()
 
-                // MUDANÇA AQUI: Vai para o Onboarding em vez da Home
-                val intent = Intent(this, OnboardingActivity::class.java)
+                // MUDANÇA AQUI: Vai para a HomeActivity
+                val intent = Intent(this, HomeActivity::class.java)
                 startActivity(intent)
                 finish()
                 return@setOnClickListener // Para o código parar aqui e não tentar o Retrofit
@@ -69,8 +69,8 @@ class MainActivity : AppCompatActivity() {
 
                         Toast.makeText(this@MainActivity, "Login Sucesso! Token: $token", Toast.LENGTH_LONG).show()
 
-                        // MUDANÇA AQUI: Vai para o Onboarding em vez da Home
-                        val intent = Intent(this@MainActivity, OnboardingActivity::class.java)
+                        // MUDANÇA AQUI: Vai para a HomeActivity
+                        val intent = Intent(this@MainActivity, HomeActivity::class.java)
                         startActivity(intent)
                         finish()
                     } else {

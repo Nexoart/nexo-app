@@ -7,6 +7,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -26,16 +27,31 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         recyclerView.layoutManager =
             StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
 
-        listaOriginal = listOf(
-            Post(artistName = "Arte 1", usernameTime = "@rafilskz", caption = "Explosão de cores", postImageUrl = null, profileImageResId = R.drawable.luz),
-            Post(artistName = "Arte 2", usernameTime = "@filipe_arts", caption = "Estudo de sombras", postImageUrl = null, profileImageResId = R.drawable.test),
-            Post(artistName = "Arte 3", usernameTime = "@rafilskz", caption = "Cenário 3D", postImageUrl = null, profileImageResId = R.drawable.eda),
-            Post(artistName = "Pixel Adventure", usernameTime = "@pixel_boy", caption = "Pixel art retro", postImageUrl = null, profileImageResId = R.drawable.eda),
-            Post(artistName = "Cyber City", usernameTime = "@neo_art", caption = "Cyberpunk vibes", postImageUrl = null, profileImageResId = R.drawable.test)
-        )
-
-        adapter = PostAdapter(listaOriginal)
+        adapter = PostAdapter(emptyList())
         recyclerView.adapter = adapter
+
+        // Consumir API
+        com.example.nexoapp.network.RetrofitClient.getApiService(requireContext()).getPosts().enqueue(object : retrofit2.Callback<List<com.example.nexoapp.network.PostBackend>> {
+            override fun onResponse(call: retrofit2.Call<List<com.example.nexoapp.network.PostBackend>>, response: retrofit2.Response<List<com.example.nexoapp.network.PostBackend>>) {
+                if (response.isSuccessful) {
+                    val postsBackend = response.body() ?: emptyList()
+                    listaOriginal = postsBackend.map {
+                        Post(
+                            id = it.id,
+                            artistName = it.artista.name,
+                            usernameTime = "@${it.artista.name.lowercase().replace(" ", "")}",
+                            caption = it.descricao,
+                            postImageUrl = it.urlImagem,
+                            profileImageUrl = it.artista.profileImage
+                        )
+                    }
+                    adapter.updateData(listaOriginal)
+                }
+            }
+            override fun onFailure(call: retrofit2.Call<List<com.example.nexoapp.network.PostBackend>>, t: Throwable) {
+                Toast.makeText(requireContext(), "Falha de conexão com o servidor", Toast.LENGTH_SHORT).show()
+            }
+        })
 
         // Filtragem local
         searchEditText.addTextChangedListener(object : TextWatcher {

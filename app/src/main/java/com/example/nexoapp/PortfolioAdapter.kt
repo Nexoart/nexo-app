@@ -9,8 +9,9 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 
-class PortfolioAdapter(private val imagesList: List<Int>) : RecyclerView.Adapter<PortfolioAdapter.PortfolioViewHolder>() {
+class PortfolioAdapter(private var imagesList: List<String?>) : RecyclerView.Adapter<PortfolioAdapter.PortfolioViewHolder>() {
 
     class PortfolioViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imgPortfolioItem: ImageView = itemView.findViewById(R.id.imgPortfolioItem)
@@ -22,8 +23,8 @@ class PortfolioAdapter(private val imagesList: List<Int>) : RecyclerView.Adapter
     }
 
     override fun onBindViewHolder(holder: PortfolioViewHolder, position: Int) {
-        val imageRes = imagesList[position]
-        holder.imgPortfolioItem.setImageResource(imageRes)
+        val imageUrl = imagesList[position]
+        Glide.with(holder.itemView.context).load(imageUrl).placeholder(R.drawable.marcy).into(holder.imgPortfolioItem)
 
         // --- A MÁGICA DO POP-UP (CARTA 1) ---
         holder.itemView.setOnClickListener {
@@ -35,7 +36,7 @@ class PortfolioAdapter(private val imagesList: List<Int>) : RecyclerView.Adapter
 
             // Cria uma ImageView no ar
             val imgView = ImageView(context)
-            imgView.setImageResource(imageRes)
+            Glide.with(context).load(imageUrl).into(imgView)
             imgView.adjustViewBounds = true
 
             // Coloca a imagem dentro da caixa e deixa o fundo transparente para escurecer a tela
@@ -50,4 +51,9 @@ class PortfolioAdapter(private val imagesList: List<Int>) : RecyclerView.Adapter
     }
 
     override fun getItemCount() = imagesList.size
+    
+    fun updateData(newList: List<String?>) {
+        imagesList = newList
+        notifyDataSetChanged()
+    }
 }

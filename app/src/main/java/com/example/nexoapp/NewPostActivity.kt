@@ -91,13 +91,13 @@ class NewPostActivity : AppCompatActivity() {
                         // d) Criar objeto do post
                         val post = PostBackend(
                             id = null,
-                            idArtista = 1, // ID Fixo (MVP)
+                            artista = com.example.nexoapp.network.UserBackend(id = 1L, name = "Rafilskz", isArtista = true, profileImage = null, bio = null),
                             urlImagem = cloudinaryUrl,
                             descricao = descricao,
                             timestamp = null
                         )
 
-                        RetrofitClient.getApiService(this@NewPostActivity).createPost(post).enqueue(object : Callback<PostBackend> {
+                        RetrofitClient.getApiService(this@NewPostActivity).createPost(1L, post).enqueue(object : Callback<PostBackend> {
                             override fun onResponse(call: Call<PostBackend>, response: Response<PostBackend>) {
                                 if (response.isSuccessful) {
                                     Toast.makeText(this@NewPostActivity, "Post publicado com sucesso!", Toast.LENGTH_SHORT).show()

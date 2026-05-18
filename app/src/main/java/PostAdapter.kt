@@ -5,14 +5,22 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nexoapp.R
+import com.example.nexoapp.network.RetrofitClient
+import com.example.nexoapp.network.PostBackend
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 data class Post(
+    val id: Long?,
     val artistName: String,
     val usernameTime: String,
     val caption: String,
     val postImageUrl: String?, // Atualizado para suportar URL da Cloudinary
-    val profileImageResId: Int,
-    var isLiked: Boolean = false // <-- PASSO 1: A variável de memória que guarda se o post tem like
+    val profileImageUrl: String?, // Substituiu profileImageResId
+    var likesCount: Int = 0, // Counter dinâmico vindo da API
+    var isLiked: Boolean = false,
+    var isFollowing: Boolean = false
 )
 
 class PostAdapter(private var postList: List<Post>) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
@@ -23,9 +31,9 @@ class PostAdapter(private var postList: List<Post>) : RecyclerView.Adapter<PostA
         val tvPostCaption: TextView = itemView.findViewById(R.id.tvPostCaption)
         val imgPost: ImageView = itemView.findViewById(R.id.imgPost)
         val imgProfile: ImageView = itemView.findViewById(R.id.imgProfile)
-
-        // PASSO 3 (Parte A): Declarando o botão de Like para o Kotlin encontrar no layout
-        // ATENÇÃO: Confirme se o ID do coração no seu item_post.xml é realmente btnLike!
+        val btnFollow: TextView = itemView.findViewById(R.id.btnFollow)
+        val btnComment: android.widget.LinearLayout = itemView.findViewById(R.id.btnComment)
+        val tvLikeCount: TextView = itemView.findViewById(R.id.tvLikeCount)
         val btnLike: ImageView = itemView.findViewById(R.id.btnLike)
     }
 
@@ -47,9 +55,44 @@ class PostAdapter(private var postList: List<Post>) : RecyclerView.Adapter<PostA
             .placeholder(R.drawable.marcy)
             .into(holder.imgPost)
             
-        holder.imgProfile.setImageResource(currentPost.profileImageResId)
+        // Foto de perfil usando Glide
+        com.bumptech.glide.Glide.with(holder.itemView.context)
+            .load(currentPost.profileImageUrl)
+            .placeholder(R.drawable.marcy)
+            .into(holder.imgProfile)
 
-        // --- PASSO 3 (Parte B): LÓGICA DO BOTÃO DE LIKE ---
+        holder.tvLikeCount.text = currentPost.likesCount.toString()
+
+        // Botão de Seguir
+        if (currentPost.isFollowing) {
+            holder.btnFollow.text = "Seguindo"
+            holder.btnFollow.setTextColor(android.graphics.Color.WHITE)
+            holder.btnFollow.setBackgroundResource(R.drawable.bg_tag_selected)
+        } else {
+            holder.btnFollow.text = "Seguir"
+            holder.btnFollow.setTextColor(android.graphics.Color.parseColor("#1B5E20"))
+            holder.btnFollow.setBackgroundResource(R.drawable.bg_tag_unselected)
+        }
+
+        holder.btnFollow.setOnClickListener {
+            val currentPos = holder.adapterPosition
+            if (currentPos != RecyclerView.NO_POSITION) {
+                currentPost.isFollowing = !currentPost.isFollowing
+                notifyItemChanged(currentPos)
+            }
+        }
+
+        // Abrir Comentários
+        holder.btnComment.setOnClickListener {
+            val postId = currentPost.id
+            if (postId != null) {
+                val activity = holder.itemView.context as? androidx.appcompat.app.AppCompatActivity
+                activity?.let {
+                    val bottomSheet = com.example.nexoapp.CommentsBottomSheet.newInstance(postId)
+                    bottomSheet.show(it.supportFragmentManager, "CommentsBottomSheet")
+                }
+            }
+        }
 
         // 1. O Kotlin pergunta para a memória: "Esse post tem like?" e desenha o ícone
         if (currentPost.isLiked) {
@@ -60,13 +103,40 @@ class PostAdapter(private var postList: List<Post>) : RecyclerView.Adapter<PostA
             holder.btnLike.setColorFilter(android.graphics.Color.parseColor("#FFFFFF")) // Branco
         }
 
-        // 2. O Kotlin fica escutando o clique do dedo do usuário no botão
+        // 2. O Kotlin fica escutando o clique do dedo do usuário no botão (Optimistic UI)
         holder.btnLike.setOnClickListener {
-            // Inverte a memória (se era falso vira verdadeiro, e vice-versa)
-            currentPost.isLiked = !currentPost.isLiked
+            val currentPos = holder.adapterPosition
+            val postId = currentPost.id
+            
+            if (currentPos != RecyclerView.NO_POSITION && postId != null) {
+                // Guardar estado original para caso a API falhe
+                val originalLikeState = currentPost.isLiked
+                val originalLikesCount = currentPost.likesCount
 
-            // Avisa o Android: "O item desta posição mudou! Desenhe-o novamente!"
-            notifyItemChanged(position)
+                // Atualiza a UI imediatamente para o usuário (Otimista)
+                currentPost.isLiked = !currentPost.isLiked
+                if (currentPost.isLiked) currentPost.likesCount++ else currentPost.likesCount--
+                notifyItemChanged(currentPos)
+
+                // Faz a chamada Retrofit em background
+                RetrofitClient.getApiService(holder.itemView.context).likePost(postId).enqueue(object : Callback<PostBackend> {
+                    override fun onResponse(call: Call<PostBackend>, response: Response<PostBackend>) {
+                        if (!response.isSuccessful) {
+                            // Reverte se o backend der erro (Ex: 500)
+                            currentPost.isLiked = originalLikeState
+                            currentPost.likesCount = originalLikesCount
+                            notifyItemChanged(currentPos)
+                        }
+                    }
+
+                    override fun onFailure(call: Call<PostBackend>, t: Throwable) {
+                        // Reverte se não houver internet ou falha de conexão
+                        currentPost.isLiked = originalLikeState
+                        currentPost.likesCount = originalLikesCount
+                        notifyItemChanged(currentPos)
+                    }
+                })
+            }
         }
     }
 
