@@ -87,14 +87,20 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun loadPosts() {
-        RetrofitClient.getApiService(requireContext()).getPosts().enqueue(object : Callback<List<PostBackend>> {
+        // Safe check for initial context
+        val initialContext = context ?: return
+        RetrofitClient.getApiService(initialContext).getPosts().enqueue(object : Callback<List<PostBackend>> {
             override fun onResponse(call: Call<List<PostBackend>>, response: Response<List<PostBackend>>) {
+                val ctx = context
+                if (!isAdded || ctx == null) return
+
                 if (response.isSuccessful) {
                     val postsBackend = response.body() ?: emptyList()
                     
                     allPosts = postsBackend.map { postBackend ->
                         Post(
                             id = postBackend.id,
+                            artistId = postBackend.artista?.id,
                             artistName = postBackend.artista?.name ?: "Usuário",
                             usernameTime = "@${postBackend.artista?.name?.lowercase()?.replace(" ", "") ?: "usuario"} • Agora",
                             caption = postBackend.descricao,
@@ -105,13 +111,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     }
                     postAdapter.updateData(allPosts)
                 } else {
-                    Toast.makeText(requireContext(), "Erro ao carregar posts do Feed", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(ctx, "Erro ao carregar posts do Feed", Toast.LENGTH_SHORT).show()
                 }
                 view?.findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(R.id.swipeRefreshLayout)?.isRefreshing = false
             }
 
             override fun onFailure(call: Call<List<PostBackend>>, t: Throwable) {
-                Toast.makeText(requireContext(), "Falha na conexão com o Feed", Toast.LENGTH_SHORT).show()
+                val ctx = context
+                if (!isAdded || ctx == null) return
+                Toast.makeText(ctx, "Falha na conexão com o Feed", Toast.LENGTH_SHORT).show()
                 view?.findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(R.id.swipeRefreshLayout)?.isRefreshing = false
             }
         })

@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="32dp"
-    android:background="#0D0D0D">
+    android:background="@color/color_bg_glow">
 
     <TextView
         android:layout_width="wrap_content"
@@ -23,7 +23,7 @@
         android:hint="Nome"
         android:textColor="#FFFFFF"
         android:textColorHint="#888888"
-        android:backgroundTint="#1B5E20"
+        android:backgroundTint="@color/color_primary"
         android:inputType="textPersonName"
         android:layout_marginBottom="16dp"/>
 
@@ -34,7 +34,7 @@
         android:hint="Email"
         android:textColor="#FFFFFF"
         android:textColorHint="#888888"
-        android:backgroundTint="#1B5E20"
+        android:backgroundTint="@color/color_primary"
         android:inputType="textEmailAddress"
         android:layout_marginBottom="16dp"/>
 
@@ -45,7 +45,7 @@
         android:hint="Senha"
         android:textColor="#FFFFFF"
         android:textColorHint="#888888"
-        android:backgroundTint="#1B5E20"
+        android:backgroundTint="@color/color_primary"
         android:inputType="textPassword"
         android:layout_marginBottom="24dp"/>
 
@@ -63,6 +63,6 @@
         android:layout_height="50dp"
         android:text="Cadastrar"
         android:textColor="#FFFFFF"
-        android:backgroundTint="#1B5E20"/>
+        android:backgroundTint="@color/color_primary"/>
 
 </LinearLayout>

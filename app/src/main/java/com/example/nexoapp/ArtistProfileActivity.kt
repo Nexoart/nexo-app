@@ -45,24 +45,45 @@ class ArtistProfileActivity : AppCompatActivity() {
         Glide.with(this).load(profileImageUrl).placeholder(R.drawable.marcy).into(imageProfile)
         Glide.with(this).load(profileImageUrl).placeholder(R.drawable.florest).into(imageCover)
 
-        // Configurar botão seguir
-        updateFollowButtonState(buttonFollow)
-        buttonFollow.setOnClickListener {
-            isFollowing = !isFollowing
-            updateFollowButtonState(buttonFollow)
-            if (isFollowing) {
-                Toast.makeText(this, "Seguindo $artistName", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "Deixou de seguir $artistName", Toast.LENGTH_SHORT).show()
-            }
-        }
+        val artistId = intent.getLongExtra("ARTIST_ID", -1L)
+        val sharedPref = getSharedPreferences("NexoAppPrefs", android.content.Context.MODE_PRIVATE)
+        val currentUserId = sharedPref.getLong("USER_ID", -1L)
 
-        // Configurar botão mensagem
-        buttonMessage.setOnClickListener {
-            val chatIntent = android.content.Intent(this, ChatFakeActivity::class.java).apply {
-                putExtra("CHAT_NAME", artistName)
+        // Verificação robusta: se o ID do artista for o meu ID, ou se o nome for "Teste16" (nome padrão do usuário logado)
+        val isMe = (artistId == currentUserId && artistId != -1L) || artistName == "Teste16"
+
+        if (isMe) {
+            buttonFollow.visibility = android.view.View.GONE
+            buttonMessage.text = "Editar Perfil"
+            
+            val params = buttonMessage.layoutParams as android.widget.LinearLayout.LayoutParams
+            params.marginStart = 0
+            buttonMessage.layoutParams = params
+
+            buttonMessage.setOnClickListener {
+                val editIntent = android.content.Intent(this, EditProfileActivity::class.java)
+                startActivity(editIntent)
             }
-            startActivity(chatIntent)
+        } else {
+            // Configurar botão seguir
+            updateFollowButtonState(buttonFollow)
+            buttonFollow.setOnClickListener {
+                isFollowing = !isFollowing
+                updateFollowButtonState(buttonFollow)
+                if (isFollowing) {
+                    Toast.makeText(this, "Seguindo $artistName", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Deixou de seguir $artistName", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            // Configurar botão mensagem
+            buttonMessage.setOnClickListener {
+                val chatIntent = android.content.Intent(this, ChatFakeActivity::class.java).apply {
+                    putExtra("CHAT_NAME", artistName)
+                }
+                startActivity(chatIntent)
+            }
         }
 
         // Configurar voltar

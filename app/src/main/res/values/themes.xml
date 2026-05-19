@@ -1,9 +1,19 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.Nexoapp" parent="Theme.Material3.DayNight.NoActionBar">
-        c
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryVariant">@color/color_primary_glow</item>
+        <item name="colorSecondary">@color/color_primary_glow</item>
+
+        <!-- Status Bar & Background -->
+        <item name="android:windowBackground">@color/color_bg_glow</item>
+        <item name="android:statusBarColor">@color/color_bg_glow</item>
+
+        <!-- Surface & Control colors -->
+        <item name="colorSurface">@color/color_bg_glow</item>
+        <item name="colorOnSurface">@color/white</item>
+        <item name="colorOnPrimary">@color/white</item>
     </style>
 
     <style name="Theme.Nexoapp" parent="Base.Theme.Nexoapp" />

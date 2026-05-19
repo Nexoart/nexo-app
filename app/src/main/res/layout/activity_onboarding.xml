@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#080808"
+    android:background="@color/color_bg_glow"
     android:padding="24dp">
 
     <!-- Topo: TextView grande e em negrito -->
@@ -44,9 +44,9 @@
             android:layout_margin="8dp"
             android:clickable="true"
             android:focusable="true"
-            app:cardBackgroundColor="#1A1A1A"
+            app:cardBackgroundColor="@color/color_border_dark"
             app:cardCornerRadius="16dp"
-            app:strokeColor="#333333"
+            app:strokeColor="@color/color_primary_glow"
             app:strokeWidth="1dp"
             app:cardElevation="0dp">
             <TextView
@@ -68,9 +68,9 @@
             android:layout_margin="8dp"
             android:clickable="true"
             android:focusable="true"
-            app:cardBackgroundColor="#1A1A1A"
+            app:cardBackgroundColor="@color/color_border_dark"
             app:cardCornerRadius="16dp"
-            app:strokeColor="#333333"
+            app:strokeColor="@color/color_primary_glow"
             app:strokeWidth="1dp"
             app:cardElevation="0dp">
             <TextView
@@ -92,9 +92,9 @@
             android:layout_margin="8dp"
             android:clickable="true"
             android:focusable="true"
-            app:cardBackgroundColor="#1A1A1A"
+            app:cardBackgroundColor="@color/color_border_dark"
             app:cardCornerRadius="16dp"
-            app:strokeColor="#333333"
+            app:strokeColor="@color/color_primary_glow"
             app:strokeWidth="1dp"
             app:cardElevation="0dp">
             <TextView
@@ -116,9 +116,9 @@
             android:layout_margin="8dp"
             android:clickable="true"
             android:focusable="true"
-            app:cardBackgroundColor="#1A1A1A"
+            app:cardBackgroundColor="@color/color_border_dark"
             app:cardCornerRadius="16dp"
-            app:strokeColor="#333333"
+            app:strokeColor="@color/color_primary_glow"
             app:strokeWidth="1dp"
             app:cardElevation="0dp">
             <TextView
@@ -140,9 +140,9 @@
             android:layout_margin="8dp"
             android:clickable="true"
             android:focusable="true"
-            app:cardBackgroundColor="#1A1A1A"
+            app:cardBackgroundColor="@color/color_border_dark"
             app:cardCornerRadius="16dp"
-            app:strokeColor="#333333"
+            app:strokeColor="@color/color_primary_glow"
             app:strokeWidth="1dp"
             app:cardElevation="0dp">
             <TextView
@@ -164,9 +164,9 @@
             android:layout_margin="8dp"
             android:clickable="true"
             android:focusable="true"
-            app:cardBackgroundColor="#1A1A1A"
+            app:cardBackgroundColor="@color/color_border_dark"
             app:cardCornerRadius="16dp"
-            app:strokeColor="#333333"
+            app:strokeColor="@color/color_primary_glow"
             app:strokeWidth="1dp"
             app:cardElevation="0dp">
             <TextView
@@ -182,7 +182,7 @@
 
     </GridLayout>
 
-    <!-- Rodapé: MaterialButton largo e verde (#1B5E20) -->
+    <!-- Rodapé: MaterialButton largo e verde -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonEnter"
         android:layout_width="0dp"
@@ -191,7 +191,7 @@
         android:textColor="#FFFFFF"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:backgroundTint="#1B5E20"
+        app:backgroundTint="@color/color_primary"
         app:cornerRadius="30dp"
         android:layout_marginBottom="24dp"
         app:layout_constraintBottom_toBottomOf="parent"

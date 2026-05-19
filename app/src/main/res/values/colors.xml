@@ -2,4 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Palette Nexo: Fundos pretos restaurados, detalhes em verde -->
+    <color name="color_primary">#10B981</color>
+    <color name="color_primary_glow">#34D399</color>
+    <color name="color_border_dark">#1A1A1A</color>
+    <color name="color_bg_glow">#080808</color>
 </resources>

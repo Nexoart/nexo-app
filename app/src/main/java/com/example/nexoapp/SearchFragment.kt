@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.example.nexoapp.network.RetrofitClient
 
 class SearchFragment : Fragment(R.layout.fragment_search) {
 
@@ -29,13 +30,15 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         recyclerView.adapter = adapter
 
         // Consumir API
-        com.example.nexoapp.network.RetrofitClient.getApiService(requireContext()).getPosts().enqueue(object : retrofit2.Callback<List<com.example.nexoapp.network.PostBackend>> {
+        RetrofitClient.getApiService(requireContext()).getPosts().enqueue(object : retrofit2.Callback<List<com.example.nexoapp.network.PostBackend>> {
             override fun onResponse(call: retrofit2.Call<List<com.example.nexoapp.network.PostBackend>>, response: retrofit2.Response<List<com.example.nexoapp.network.PostBackend>>) {
+                if (!isAdded || context == null) return
                 if (response.isSuccessful) {
                     val postsBackend = response.body() ?: emptyList()
                     listaOriginal = postsBackend.map {
                         Post(
                             id = it.id,
+                            artistId = it.artista?.id,
                             artistName = it.artista?.name ?: "Usuário",
                             usernameTime = "@${it.artista?.name?.lowercase()?.replace(" ", "") ?: "usuario"}",
                             caption = it.descricao,
@@ -48,7 +51,9 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 }
             }
             override fun onFailure(call: retrofit2.Call<List<com.example.nexoapp.network.PostBackend>>, t: Throwable) {
-                Toast.makeText(requireContext(), "Falha de conexão com o servidor", Toast.LENGTH_SHORT).show()
+                val ctx = context
+                if (!isAdded || ctx == null) return
+                Toast.makeText(ctx, "Falha de conexão com o servidor", Toast.LENGTH_SHORT).show()
             }
         })
 
