@@ -6,6 +6,7 @@ import android.widget.EditText
 import android.widget.Switch
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.nexoapp.network.LoginResponse
 import com.example.nexoapp.network.RegisterRequest
 import com.example.nexoapp.network.RetrofitClient
 import retrofit2.Call
@@ -36,19 +37,32 @@ class RegisterActivity : AppCompatActivity() {
 
             val request = RegisterRequest(name, email, password, isArtista)
 
-            RetrofitClient.getApiService(this).registerUser(request).enqueue(object : Callback<Void> {
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+            RetrofitClient.getApiService(this).registerUser(request).enqueue(object : Callback<LoginResponse> {
+                override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                     if (response.isSuccessful) {
-                        Toast.makeText(this@RegisterActivity, "Cadastro realizado!", Toast.LENGTH_SHORT).show()
-                        val intent = android.content.Intent(this@RegisterActivity, OnboardingActivity::class.java)
-                        startActivity(intent)
-                        finish()
+                        val token = response.body()?.token
+                        val id = response.body()?.id
+                        
+                        if (token != null && id != null) {
+                            val sharedPref = getSharedPreferences("NexoAppPrefs", android.content.Context.MODE_PRIVATE)
+                            with (sharedPref.edit()) {
+                                putString("AUTH_TOKEN", token)
+                                putLong("USER_ID", id)
+                                apply()
+                            }
+                            Toast.makeText(this@RegisterActivity, "Cadastro realizado!", Toast.LENGTH_SHORT).show()
+                            val intent = android.content.Intent(this@RegisterActivity, OnboardingActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        } else {
+                            Toast.makeText(this@RegisterActivity, "Erro: ID ou Token não recebidos do servidor!", Toast.LENGTH_LONG).show()
+                        }
                     } else {
                         Toast.makeText(this@RegisterActivity, "Erro ao cadastrar", Toast.LENGTH_SHORT).show()
                     }
                 }
 
-                override fun onFailure(call: Call<Void>, t: Throwable) {
+                override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
                     Toast.makeText(this@RegisterActivity, "Falha na conexão", Toast.LENGTH_SHORT).show()
                 }
             })

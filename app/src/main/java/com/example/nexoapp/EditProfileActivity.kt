@@ -30,18 +30,44 @@ class EditProfileActivity : AppCompatActivity() {
     private lateinit var imgEditProfile: ImageView
     private lateinit var imgEditCover: ImageView
     private var currentUserInfo: UserBackend? = null
+    private var currentUserId: Long = 1L
+    private var isCroppingCover = false
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
-            selectedImageUri = uri
-            imgEditProfile.setImageURI(uri)
+            isCroppingCover = false
+            startCrop(uri)
         }
     }
 
     private val pickCoverMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
-            selectedCoverUri = uri
-            imgEditCover.setImageURI(uri)
+            isCroppingCover = true
+            startCrop(uri)
+        }
+    }
+
+    private fun startCrop(uri: Uri) {
+        val destinationUri = Uri.fromFile(File(cacheDir, "cropped_${System.currentTimeMillis()}.jpg"))
+        com.yalantis.ucrop.UCrop.of(uri, destinationUri)
+            .withAspectRatio(if (isCroppingCover) 16f else 1f, if (isCroppingCover) 9f else 1f)
+            .start(this)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK && requestCode == com.yalantis.ucrop.UCrop.REQUEST_CROP) {
+            val resultUri = com.yalantis.ucrop.UCrop.getOutput(data!!)
+            if (isCroppingCover) {
+                selectedCoverUri = resultUri
+                imgEditCover.setImageURI(resultUri)
+            } else {
+                selectedImageUri = resultUri
+                imgEditProfile.setImageURI(resultUri)
+            }
+        } else if (resultCode == com.yalantis.ucrop.UCrop.RESULT_ERROR) {
+            val error = com.yalantis.ucrop.UCrop.getError(data!!)
+            Toast.makeText(this, "Erro no recorte: ${error?.message}", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -57,8 +83,11 @@ class EditProfileActivity : AppCompatActivity() {
         val editNewBio = findViewById<EditText>(R.id.editNewBio)
         val btnSaveProfile = findViewById<MaterialButton>(R.id.btnSaveProfile)
 
+        val sharedPref = getSharedPreferences("NexoAppPrefs", android.content.Context.MODE_PRIVATE)
+        currentUserId = sharedPref.getLong("USER_ID", 1L)
+
         // Buscar dados atuais para preencher
-        RetrofitClient.getApiService(this).getUserProfile(1L).enqueue(object : Callback<UserBackend> {
+        RetrofitClient.getApiService(this).getUserProfile(currentUserId).enqueue(object : Callback<UserBackend> {
             override fun onResponse(call: Call<UserBackend>, response: Response<UserBackend>) {
                 if (response.isSuccessful) {
                     currentUserInfo = response.body()
@@ -154,8 +183,8 @@ class EditProfileActivity : AppCompatActivity() {
 
     private fun updateProfileCall(name: String, bio: String, profileImageUrl: String?, coverImageUrl: String?, btnSaveProfile: MaterialButton) {
         val updatedUser = UserBackend(
-            id = 1L,
-            name = if (name.isBlank()) "Rafilskz" else name,
+            id = currentUserId,
+            name = if (name.isBlank()) currentUserInfo?.name ?: "Usuário" else name,
             isArtista = currentUserInfo?.isArtista ?: true,
             profileImage = profileImageUrl,
             bio = bio,
@@ -164,7 +193,7 @@ class EditProfileActivity : AppCompatActivity() {
             curtidasCount = currentUserInfo?.curtidasCount ?: 0
         )
 
-        RetrofitClient.getApiService(this).updateUserProfile(1L, updatedUser).enqueue(object : Callback<UserBackend> {
+        RetrofitClient.getApiService(this).updateUserProfile(currentUserId, updatedUser).enqueue(object : Callback<UserBackend> {
             override fun onResponse(call: Call<UserBackend>, response: Response<UserBackend>) {
                 if (response.isSuccessful) {
                     Toast.makeText(this@EditProfileActivity, "Perfil salvo!", Toast.LENGTH_SHORT).show()
@@ -186,6 +215,9 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
     private fun getFileFromUri(uri: Uri): File? {
+        if (uri.scheme == "file") {
+            return File(uri.path!!)
+        }
         return try {
             val inputStream = contentResolver.openInputStream(uri)
             val tempFile = File.createTempFile("upload", ".jpg", cacheDir)

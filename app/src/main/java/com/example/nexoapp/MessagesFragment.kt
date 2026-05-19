@@ -14,6 +14,12 @@ class MessagesFragment : Fragment(R.layout.fragment_messages) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewMessages)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // Em breve: Vamos criar um MessageAdapter e colocar a lista do Ikusi, Dana, etc aqui!
+        val list = listOf(
+            Conversation("Ikusi", "Mandei o arquivo psd pra você analisar.", R.drawable.marcy),
+            Conversation("Dana", "Obrigada! Ficou incrível o concept.", R.drawable.shiorivolt),
+            Conversation("Artwins", "Bora jogar algo mais tarde?", R.drawable.marcy),
+            Conversation("Nexo Team", "Bem-vindo à comunidade NexoArt!", R.drawable.shiorivolt)
+        )
+        recyclerView.adapter = MessageAdapter(list)
     }
 }

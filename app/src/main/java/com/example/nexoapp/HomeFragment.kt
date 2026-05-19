@@ -1,7 +1,5 @@
 package com.example.nexoapp
 
-import Post
-import PostAdapter
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -39,8 +37,47 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             startActivity(intent)
         }
 
+        // Configurar o Pull-to-Refresh
+        val swipeRefreshLayout = view.findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(R.id.swipeRefreshLayout)
+        swipeRefreshLayout.setOnRefreshListener { loadPosts() }
+
         // 7. Configurar lógica das Tags
         setupTags(view)
+        
+        // 8. Configurar abas do topo (Descobrir, Seguindo, Recentes)
+        setupMainTabs(view)
+    }
+
+    private fun setupMainTabs(view: View) {
+        val layoutTabs = view.findViewById<android.widget.LinearLayout>(R.id.layoutTabs)
+        val tabDescobrir = layoutTabs.getChildAt(0) as android.widget.LinearLayout
+        val tabSeguindo = layoutTabs.getChildAt(1) as android.widget.LinearLayout
+        val tabRecentes = layoutTabs.getChildAt(2) as android.widget.LinearLayout
+
+        val tabs = listOf(tabDescobrir, tabSeguindo, tabRecentes)
+
+        tabs.forEachIndexed { index, tab ->
+            tab.setOnClickListener {
+                // Reset all
+                tabs.forEach { t ->
+                    (t.getChildAt(0) as android.widget.TextView).setTextColor(android.graphics.Color.parseColor("#888888"))
+                    (t.getChildAt(0) as android.widget.TextView).setTypeface(null, android.graphics.Typeface.NORMAL)
+                    (t.getChildAt(1) as View).setBackgroundColor(android.graphics.Color.TRANSPARENT)
+                }
+
+                // Activate clicked
+                (tab.getChildAt(0) as android.widget.TextView).setTextColor(android.graphics.Color.WHITE)
+                (tab.getChildAt(0) as android.widget.TextView).setTypeface(null, android.graphics.Typeface.BOLD)
+                (tab.getChildAt(1) as View).setBackgroundColor(android.graphics.Color.parseColor("#1B5E20"))
+
+                // Filter logic
+                when (index) {
+                    0 -> postAdapter.updateData(allPosts) // Descobrir (todos)
+                    1 -> postAdapter.updateData(allPosts.filter { it.isFollowing }) // Seguindo (os que têm o botão de seguir verde, simulado)
+                    2 -> postAdapter.updateData(allPosts.sortedByDescending { it.id }) // Recentes
+                }
+            }
+        }
     }
 
     override fun onResume() {
@@ -58,11 +95,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     allPosts = postsBackend.map { postBackend ->
                         Post(
                             id = postBackend.id,
-                            artistName = postBackend.artista.name,
-                            usernameTime = "@${postBackend.artista.name.lowercase().replace(" ", "")} • Agora",
+                            artistName = postBackend.artista?.name ?: "Usuário",
+                            usernameTime = "@${postBackend.artista?.name?.lowercase()?.replace(" ", "") ?: "usuario"} • Agora",
                             caption = postBackend.descricao,
                             postImageUrl = postBackend.urlImagem,
-                            profileImageUrl = postBackend.artista.profileImage,
+                            profileImageUrl = postBackend.artista?.profileImage,
                             likesCount = postBackend.curtidasCount // Dinâmico!
                         )
                     }
@@ -70,10 +107,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 } else {
                     Toast.makeText(requireContext(), "Erro ao carregar posts do Feed", Toast.LENGTH_SHORT).show()
                 }
+                view?.findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(R.id.swipeRefreshLayout)?.isRefreshing = false
             }
 
             override fun onFailure(call: Call<List<PostBackend>>, t: Throwable) {
                 Toast.makeText(requireContext(), "Falha na conexão com o Feed", Toast.LENGTH_SHORT).show()
+                view?.findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(R.id.swipeRefreshLayout)?.isRefreshing = false
             }
         })
     }

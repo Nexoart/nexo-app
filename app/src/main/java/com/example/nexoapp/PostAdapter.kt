@@ -1,3 +1,5 @@
+package com.example.nexoapp
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +12,7 @@ import com.example.nexoapp.network.PostBackend
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.collections.emptyList
 
 data class Post(
     val id: Long?,
@@ -35,6 +38,11 @@ class PostAdapter(private var postList: List<Post>) : RecyclerView.Adapter<PostA
         val btnComment: android.widget.LinearLayout = itemView.findViewById(R.id.btnComment)
         val tvLikeCount: TextView = itemView.findViewById(R.id.tvLikeCount)
         val btnLike: ImageView = itemView.findViewById(R.id.btnLike)
+        
+        // Inline Comments
+        val rvInlineComments: RecyclerView = itemView.findViewById(R.id.rvInlineComments)
+        val editInlineComment: android.widget.EditText = itemView.findViewById(R.id.editInlineComment)
+        val btnSendInlineComment: ImageView = itemView.findViewById(R.id.btnSendInlineComment)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
@@ -62,6 +70,19 @@ class PostAdapter(private var postList: List<Post>) : RecyclerView.Adapter<PostA
             .into(holder.imgProfile)
 
         holder.tvLikeCount.text = currentPost.likesCount.toString()
+
+        // Clique no nome ou foto do artista para ver o perfil completo
+        val profileClickListener = View.OnClickListener {
+            val context = holder.itemView.context
+            val intent = android.content.Intent(context, com.example.nexoapp.ArtistProfileActivity::class.java).apply {
+                putExtra("ARTIST_NAME", currentPost.artistName)
+                putExtra("PROFILE_IMAGE_URL", currentPost.profileImageUrl)
+                putExtra("IS_FOLLOWING", currentPost.isFollowing)
+            }
+            context.startActivity(intent)
+        }
+        holder.tvArtistName.setOnClickListener(profileClickListener)
+        holder.imgProfile.setOnClickListener(profileClickListener)
 
         // Botão de Seguir
         if (currentPost.isFollowing) {
@@ -135,6 +156,52 @@ class PostAdapter(private var postList: List<Post>) : RecyclerView.Adapter<PostA
                         currentPost.likesCount = originalLikesCount
                         notifyItemChanged(currentPos)
                     }
+                })
+            }
+        }
+
+        // Configurar lista aninhada de comentários
+        holder.rvInlineComments.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(holder.itemView.context)
+        val commentsAdapter = com.example.nexoapp.InlineCommentsAdapter(emptyList()) 
+        holder.rvInlineComments.adapter = commentsAdapter
+
+        // Carregar comentários daquele post
+        val postId = currentPost.id
+        if (postId != null) {
+            RetrofitClient.getApiService(holder.itemView.context).getComments(postId).enqueue(object : Callback<List<com.example.nexoapp.network.ComentarioBackend>> {
+                override fun onResponse(call: Call<List<com.example.nexoapp.network.ComentarioBackend>>, response: Response<List<com.example.nexoapp.network.ComentarioBackend>>) {
+                    if (response.isSuccessful) {
+                        commentsAdapter.updateData(response.body() ?: emptyList())
+                    }
+                }
+                override fun onFailure(call: Call<List<com.example.nexoapp.network.ComentarioBackend>>, t: Throwable) {}
+            })
+        }
+
+        // Enviar comentário inline
+        holder.btnSendInlineComment.setOnClickListener {
+            val text = holder.editInlineComment.text.toString()
+            if (text.isNotBlank() && postId != null) {
+                // Enviar com autor "Usuário" (o ideal é buscar o nome no SharedPreferences se necessário)
+                val req = com.example.nexoapp.network.ComentarioRequest(autor = "Usuário", texto = text)
+                
+                RetrofitClient.getApiService(holder.itemView.context).addComment(postId, req).enqueue(object : Callback<PostBackend> {
+                    override fun onResponse(call: Call<PostBackend>, response: Response<PostBackend>) {
+                        if (response.isSuccessful) {
+                            holder.editInlineComment.text.clear()
+                            
+                            // Recarregar a lista de comentários para atualizar a UI
+                            RetrofitClient.getApiService(holder.itemView.context).getComments(postId).enqueue(object : Callback<List<com.example.nexoapp.network.ComentarioBackend>> {
+                                override fun onResponse(c: Call<List<com.example.nexoapp.network.ComentarioBackend>>, r: Response<List<com.example.nexoapp.network.ComentarioBackend>>) {
+                                    if (r.isSuccessful) {
+                                        commentsAdapter.updateData(r.body() ?: emptyList())
+                                    }
+                                }
+                                override fun onFailure(c: Call<List<com.example.nexoapp.network.ComentarioBackend>>, t: Throwable) {}
+                            })
+                        }
+                    }
+                    override fun onFailure(call: Call<PostBackend>, t: Throwable) {}
                 })
             }
         }

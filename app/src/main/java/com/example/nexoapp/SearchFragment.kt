@@ -1,7 +1,5 @@
 package com.example.nexoapp
 
-import Post
-import PostAdapter
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -38,11 +36,12 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                     listaOriginal = postsBackend.map {
                         Post(
                             id = it.id,
-                            artistName = it.artista.name,
-                            usernameTime = "@${it.artista.name.lowercase().replace(" ", "")}",
+                            artistName = it.artista?.name ?: "Usuário",
+                            usernameTime = "@${it.artista?.name?.lowercase()?.replace(" ", "") ?: "usuario"}",
                             caption = it.descricao,
                             postImageUrl = it.urlImagem,
-                            profileImageUrl = it.artista.profileImage
+                            profileImageUrl = it.artista?.profileImage,
+                            likesCount = it.curtidasCount
                         )
                     }
                     adapter.updateData(listaOriginal)

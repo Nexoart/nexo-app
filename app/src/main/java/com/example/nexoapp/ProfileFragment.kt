@@ -32,8 +32,11 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         
 
 
-        // Buscar dados dinâmicos do backend (ID 1 fixo para o MVP)
-        RetrofitClient.getApiService(requireContext()).getUserProfile(1L).enqueue(object : Callback<UserBackend> {
+        val sharedPref = requireContext().getSharedPreferences("NexoAppPrefs", android.content.Context.MODE_PRIVATE)
+        val currentUserId = sharedPref.getLong("USER_ID", 1L)
+
+        // Buscar dados dinâmicos do backend usando o ID real
+        RetrofitClient.getApiService(requireContext()).getUserProfile(currentUserId).enqueue(object : Callback<UserBackend> {
             override fun onResponse(call: Call<UserBackend>, response: Response<UserBackend>) {
                 if (response.isSuccessful) {
                     val user = response.body()
@@ -74,8 +77,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             override fun onResponse(call: Call<List<com.example.nexoapp.network.PostBackend>>, response: Response<List<com.example.nexoapp.network.PostBackend>>) {
                 if (response.isSuccessful) {
                     val posts = response.body() ?: emptyList()
-                    // Filtra apenas as imagens dos posts do usuário (ID 1)
-                    val userPosts = posts.filter { it.artista.id == 1L }
+                    // Filtra apenas as imagens dos posts do usuário atual usando safe call
+                    val userPosts = posts.filter { it.artista?.id == currentUserId }
                     val imageUrls = userPosts.map { it.urlImagem }
                     portfolioAdapter.updateData(imageUrls)
                 }
@@ -85,8 +88,14 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             }
         })
 
+        val buttonFollow = view.findViewById<View>(R.id.buttonFollow)
+        buttonFollow.visibility = View.GONE
+
         val btnMensagem = view.findViewById<Button>(R.id.buttonMessage)
         btnMensagem.text = "Editar Perfil"
+        val params = btnMensagem.layoutParams as android.widget.LinearLayout.LayoutParams
+        params.marginStart = 0
+        btnMensagem.layoutParams = params
         btnMensagem.setOnClickListener {
             val intent = Intent(requireContext(), EditProfileActivity::class.java)
             startActivity(intent)

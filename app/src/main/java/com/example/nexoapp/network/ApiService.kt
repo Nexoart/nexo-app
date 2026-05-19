@@ -15,7 +15,10 @@ import retrofit2.http.Path
 // --- AS SUAS DATA CLASSES (Os moldes dos dados) ---
 data class LoginRequest(val email: String, val password: String)
 
-data class LoginResponse(val token: String)
+data class LoginResponse(
+    @com.google.gson.annotations.SerializedName("token") val token: String?,
+    @com.google.gson.annotations.SerializedName("id") val id: Long?
+)
 
 data class UserBackend(
     val id: Long, 
@@ -30,7 +33,7 @@ data class UserBackend(
 
 data class PostBackend(
     val id: Long?, // Mudado de Long para Long? para aceitar null
-    val artista: UserBackend,
+    val artista: UserBackend?, // Tornado nullable para não sobrescrever dados no BD
     val urlImagem: String?,
     val descricao: String,
     val timestamp: String?,
@@ -48,7 +51,7 @@ interface ApiService {
 
     // Nova Rota de Cadastro que aponta pro seu Controller do Spring Boot
     @POST("auth/register")
-    fun registerUser(@Body request: RegisterRequest): Call<Void>
+    fun registerUser(@Body request: RegisterRequest): Call<LoginResponse>
 
     // Nova rota para obter os posts do Feed
     @GET("posts")

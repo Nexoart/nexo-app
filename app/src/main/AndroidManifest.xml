@@ -13,6 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Nexoapp">
         <activity android:name=".ChatFakeActivity" />
+        <activity android:name=".ArtistProfileActivity" />
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
@@ -36,6 +37,10 @@
         <activity 
             android:name=".EditProfileActivity"
             android:exported="false" />
+        <activity 
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"/>
     </application>
 
 </manifest>

@@ -57,22 +57,23 @@ class MainActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                     if (response.isSuccessful) {
                         val token = response.body()?.token
+                        val id = response.body()?.id
                         
-                        // Salvar o Token no SharedPreferences
-                        if (token != null) {
+                        if (token != null && id != null) {
                             val sharedPref = getSharedPreferences("NexoAppPrefs", android.content.Context.MODE_PRIVATE)
                             with (sharedPref.edit()) {
                                 putString("AUTH_TOKEN", token)
+                                putLong("USER_ID", id)
                                 apply()
                             }
+                            Toast.makeText(this@MainActivity, "Login Sucesso! Token: $token", Toast.LENGTH_LONG).show()
+
+                            val intent = Intent(this@MainActivity, HomeActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        } else {
+                            Toast.makeText(this@MainActivity, "Erro: ID ou Token não recebidos do servidor!", Toast.LENGTH_LONG).show()
                         }
-
-                        Toast.makeText(this@MainActivity, "Login Sucesso! Token: $token", Toast.LENGTH_LONG).show()
-
-                        // MUDANÇA AQUI: Vai para a HomeActivity
-                        val intent = Intent(this@MainActivity, HomeActivity::class.java)
-                        startActivity(intent)
-                        finish()
                     } else {
                         Toast.makeText(this@MainActivity, "Erro: Usuário ou senha inválidos", Toast.LENGTH_SHORT).show()
                     }

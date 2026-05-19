@@ -26,12 +26,39 @@ class NewPostActivity : AppCompatActivity() {
     private var selectedImageUri: Uri? = null
     private lateinit var imgPreview: ImageView
 
-    // a) ActivityResultLauncher para abrir a galeria
-    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+    // a) ActivityResultLauncher moderno para abrir a galeria
+    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
-            selectedImageUri = uri
-            imgPreview.setImageURI(uri)
-            imgPreview.scaleType = ImageView.ScaleType.CENTER_CROP
+            val destinationUri = Uri.fromFile(File(cacheDir, "post_cropped_${System.currentTimeMillis()}.jpg"))
+            com.yalantis.ucrop.UCrop.of(uri, destinationUri)
+                .withAspectRatio(1f, 1f)
+                .start(this)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: android.content.Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK && requestCode == com.yalantis.ucrop.UCrop.REQUEST_CROP) {
+            val resultUri = com.yalantis.ucrop.UCrop.getOutput(data!!)
+            if (resultUri != null) {
+                selectedImageUri = resultUri
+                
+                // Remover limites do ícone e o tom verde
+                imgPreview.layoutParams.width = android.view.ViewGroup.LayoutParams.MATCH_PARENT
+                imgPreview.layoutParams.height = android.view.ViewGroup.LayoutParams.MATCH_PARENT
+                imgPreview.scaleType = ImageView.ScaleType.CENTER_CROP
+                imgPreview.clearColorFilter()
+                imgPreview.imageTintList = null // CRÍTICO: remove o tint verde do XML que pintava toda a imagem carregada!
+                imgPreview.requestLayout()
+
+                com.bumptech.glide.Glide.with(this)
+                    .load(resultUri)
+                    .centerCrop()
+                    .into(imgPreview)
+            }
+        } else if (resultCode == com.yalantis.ucrop.UCrop.RESULT_ERROR) {
+            val error = com.yalantis.ucrop.UCrop.getError(data!!)
+            Toast.makeText(this, "Erro no recorte: ${error?.message}", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -49,11 +76,26 @@ class NewPostActivity : AppCompatActivity() {
 
         // Clique no CardView para selecionar imagem
         cardUpload.setOnClickListener {
-            pickImageLauncher.launch("image/*")
+            pickImageLauncher.launch(androidx.activity.result.PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
         btnBack.setOnClickListener {
             finish()
+        }
+
+        // Lógica das tags sugeridas
+        val tags = listOf(
+            findViewById<android.widget.TextView>(R.id.tagAddConcept),
+            findViewById<android.widget.TextView>(R.id.tagAdd3D),
+            findViewById<android.widget.TextView>(R.id.tagAddAnime),
+            findViewById<android.widget.TextView>(R.id.tagAddPixel)
+        )
+        tags.forEach { tagView ->
+            tagView.setOnClickListener {
+                val currentText = editDescription.text.toString()
+                editDescription.setText("$currentText ${tagView.text} ".trimStart())
+                editDescription.setSelection(editDescription.text.length)
+            }
         }
 
         btnPublish.setOnClickListener {
@@ -88,16 +130,19 @@ class NewPostActivity : AppCompatActivity() {
                         // c) Ler a string de resposta (URL do Cloudinary)
                         val cloudinaryUrl = response.body()?.string() ?: ""
 
-                        // d) Criar objeto do post
+                        val sharedPref = getSharedPreferences("NexoAppPrefs", android.content.Context.MODE_PRIVATE)
+                        val currentUserId = sharedPref.getLong("USER_ID", 1L)
+
+                        // d) Criar objeto do post sem enviar o User falso (evita corromper o DB)
                         val post = PostBackend(
                             id = null,
-                            artista = com.example.nexoapp.network.UserBackend(id = 1L, name = "Rafilskz", isArtista = true, profileImage = null, bio = null),
+                            artista = null, 
                             urlImagem = cloudinaryUrl,
                             descricao = descricao,
                             timestamp = null
                         )
 
-                        RetrofitClient.getApiService(this@NewPostActivity).createPost(1L, post).enqueue(object : Callback<PostBackend> {
+                        RetrofitClient.getApiService(this@NewPostActivity).createPost(currentUserId, post).enqueue(object : Callback<PostBackend> {
                             override fun onResponse(call: Call<PostBackend>, response: Response<PostBackend>) {
                                 if (response.isSuccessful) {
                                     Toast.makeText(this@NewPostActivity, "Post publicado com sucesso!", Toast.LENGTH_SHORT).show()
@@ -133,6 +178,9 @@ class NewPostActivity : AppCompatActivity() {
     }
 
     private fun getFileFromUri(uri: Uri): File? {
+        if (uri.scheme == "file") {
+            return File(uri.path!!)
+        }
         return try {
             val inputStream = contentResolver.openInputStream(uri)
             val tempFile = File.createTempFile("upload", ".jpg", cacheDir)
