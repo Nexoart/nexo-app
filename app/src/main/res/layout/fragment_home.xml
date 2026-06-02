@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg_glow">
+
+    <!-- Fake Tabs Layout -->
+    <LinearLayout
+        android:id="@+id/layoutTabs"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Tab: Descobrir (Selecionada) -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="Descobrir"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:gravity="center"/>
+                
+            <!-- Indicador Verde Acento -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/color_primary"/>
+        </LinearLayout>
+
+        <!-- Tab: Seguindo -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="Seguindo"
+                android:textColor="#888888"
+                android:textSize="14sp"
+                android:gravity="center"/>
+                
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@android:color/transparent"/>
+        </LinearLayout>
+
+        <!-- Tab: Recentes -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="Recentes"
+                android:textColor="#888888"
+                android:textSize="14sp"
+                android:gravity="center"/>
+                
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@android:color/transparent"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/tabDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_border_dark"
+        app:layout_constraintTop_toBottomOf="@id/layoutTabs"/>
+
+    <!-- Tags Horizontais -->
+    <HorizontalScrollView
+        android:id="@+id/scrollTags"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:background="@color/color_bg_glow"
+        app:layout_constraintTop_toBottomOf="@id/tabDivider">
+        
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            
+            <TextView android:id="@+id/tagAll" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Todos" android:textColor="#FFFFFF" android:background="@drawable/bg_tag_selected" android:padding="8dp" android:layout_marginEnd="8dp"/>
+            <TextView android:id="@+id/tagConcept" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="#ConceptArt" android:textColor="#888888" android:background="@drawable/bg_tag_unselected" android:padding="8dp" android:layout_marginEnd="8dp"/>
+            <TextView android:id="@+id/tag3D" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="#3D" android:textColor="#888888" android:background="@drawable/bg_tag_unselected" android:padding="8dp" android:layout_marginEnd="8dp"/>
+            <TextView android:id="@+id/tagAnime" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="#Anime" android:textColor="#888888" android:background="@drawable/bg_tag_unselected" android:padding="8dp" android:layout_marginEnd="8dp"/>
+            <TextView android:id="@+id/tagPixel" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="#PixelArt" android:textColor="#888888" android:background="@drawable/bg_tag_unselected" android:padding="8dp" android:layout_marginEnd="8dp"/>
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Feed -->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/scrollTags"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewFeed"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"/>
+            
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <!-- Floating Action Button com Verde Acento -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabNewPost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        android:src="@android:drawable/ic_input_add"
+        app:tint="#FFFFFF"
+        app:backgroundTint="@color/color_primary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

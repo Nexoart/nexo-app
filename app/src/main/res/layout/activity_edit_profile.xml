@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/color_bg_glow"
+    android:gravity="center_horizontal"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Customizar Perfil"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="32dp"/>
+
+    <!-- Pré-visualização da Capa -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardEditCover"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        app:cardCornerRadius="12dp"
+        app:cardBackgroundColor="@color/color_border_dark"
+        android:layout_marginBottom="16dp">
+
+        <ImageView
+            android:id="@+id/imgEditCover"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/shiorivolt"
+            android:scaleType="centerCrop"/>
+            
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSelectCover"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Selecionar Imagem de Capa"
+            android:layout_gravity="center"
+            app:backgroundTint="#88000000"
+            app:cornerRadius="8dp" />
+    </androidx.cardview.widget.CardView>
+
+    <!-- Foto de Perfil Redonda -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardEditProfile"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        app:cardCornerRadius="60dp"
+        app:cardBackgroundColor="@color/color_border_dark"
+        android:layout_marginBottom="16dp">
+
+        <ImageView
+            android:id="@+id/imgEditProfile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/marcy"
+            android:scaleType="centerCrop"/>
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tocar para mudar foto"
+        android:textColor="#888888"
+        android:textSize="14sp"
+        android:layout_marginBottom="32dp"/>
+
+    <EditText
+        android:id="@+id/editNewName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Seu Nome"
+        android:textColorHint="#888888"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="@color/color_primary"
+        android:padding="12dp"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:id="@+id/editNewBio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Sua Biografia"
+        android:textColorHint="#888888"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="@color/color_primary"
+        android:padding="12dp"
+        android:layout_marginBottom="32dp"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSaveProfile"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="Salvar e Continuar"
+        android:textColor="#FFFFFF"
+        app:backgroundTint="@color/color_primary"
+        app:cornerRadius="8dp" />
+
+</LinearLayout>

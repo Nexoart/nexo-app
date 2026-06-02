@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#080808"
+    android:paddingTop="12dp">
+
+    <!-- Foto de Perfil -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardProfileImage"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="16dp"
+        app:cardCornerRadius="22dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="#1A1A1A"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imgProfile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            tools:ignore="ContentDescription"
+            tools:src="@tools:sample/avatars" />
+    </androidx.cardview.widget.CardView>
+
+    <!-- Nome do Artista -->
+    <TextView
+        android:id="@+id/tvArtistName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
+        app:layout_constraintStart_toEndOf="@id/cardProfileImage"
+        app:layout_constraintTop_toTopOf="@id/cardProfileImage"
+        tools:text="artwins" />
+
+    <!-- Botão Seguir -->
+    <TextView
+        android:id="@+id/btnFollow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:text="Seguir"
+        android:textColor="@color/color_primary"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:background="@drawable/bg_tag_unselected"
+        app:layout_constraintStart_toEndOf="@id/tvArtistName"
+        app:layout_constraintBottom_toBottomOf="@id/tvArtistName"
+        app:layout_constraintTop_toTopOf="@id/tvArtistName" />
+
+    <!-- Username e Tempo -->
+    <TextView
+        android:id="@+id/tvUsernameTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#A0A0A0"
+        android:textSize="13sp"
+        android:layout_marginTop="2dp"
+        app:layout_constraintStart_toStartOf="@id/tvArtistName"
+        app:layout_constraintTop_toBottomOf="@id/tvArtistName"
+        tools:text="\@artwins • 5hr" />
+
+    <!-- Ícone de Opções -->
+    <ImageView
+        android:id="@+id/imgOptions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:padding="8dp"
+        app:tint="#A0A0A0"
+        app:layout_constraintBottom_toBottomOf="@id/cardProfileImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/cardProfileImage"
+        tools:ignore="ContentDescription"
+        android:src="@android:drawable/ic_menu_more" />
+
+    <!-- Legenda do Post -->
+    <TextView
+        android:id="@+id/tvPostCaption"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardProfileImage"
+        tools:text="Nova arte digital!" />
+
+    <!-- Imagem do Post -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardPostImage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="#1A1A1A"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvPostCaption">
+
+        <ImageView
+            android:id="@+id/imgPost"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:scaleType="centerCrop"
+            tools:ignore="ContentDescription"
+            tools:src="@tools:sample/backgrounds/scenic" />
+    </androidx.cardview.widget.CardView>
+
+    <!-- Barra de Interações -->
+    <LinearLayout
+        android:id="@+id/layoutInteractions"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardPostImage">
+
+        <!-- Comentário -->
+        <LinearLayout
+            android:id="@+id/btnComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="8dp">
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                app:tint="#A0A0A0"
+                android:src="@android:drawable/ic_menu_edit" />
+            <TextView
+                android:id="@+id/tvCommentCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:textColor="#A0A0A0"
+                android:textSize="14sp"
+                tools:text="1" />
+        </LinearLayout>
+
+        <Space android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" />
+
+        <!-- Like -->
+        <LinearLayout
+            android:id="@+id/layoutLike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="8dp">
+            <ImageView
+                android:id="@+id/btnLike"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                app:tint="#A0A0A0"
+                android:src="@drawable/ic_favorite_border" />
+            <TextView
+                android:id="@+id/tvLikeCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:textColor="#A0A0A0"
+                android:textSize="14sp"
+                tools:text="89" />
+        </LinearLayout>
+
+        <Space android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" />
+
+        <!-- Compartilhar -->
+        <LinearLayout
+            android:id="@+id/btnShare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="8dp">
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                app:tint="#A0A0A0"
+                android:src="@android:drawable/ic_menu_share" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Inline Comments RecyclerView (ESTE ESTAVA FALTANDO) -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvInlineComments"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintTop_toBottomOf="@id/layoutInteractions"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Entrada de Comentário Inline -->
+    <LinearLayout
+        android:id="@+id/layoutInlineComment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@id/rvInlineComments"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        
+        <EditText
+            android:id="@+id/editInlineComment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Adicione um comentário..."
+            android:textColorHint="#888888"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:background="@android:color/transparent"/>
+            
+        <ImageView
+            android:id="@+id/btnSendInlineComment"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@android:drawable/ic_menu_send"
+            app:tint="@color/color_primary" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:background="#1A1A1A"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutInlineComment" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

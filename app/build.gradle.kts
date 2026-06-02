@@ -41,7 +41,16 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.swiperefreshlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    // Retrofit para chamadas HTTP
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    // Converter o JSON do Spring Boot em objetos Kotlin
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    // Glide para carregar imagens da URL
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    // uCrop para recorte de imagens
+    implementation("com.github.yalantis:ucrop:2.2.8")
 }
