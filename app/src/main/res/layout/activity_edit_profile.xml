@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="#121212"
+    android:background="@color/color_bg_glow"
     android:gravity="center_horizontal"
     android:padding="24dp">
 
@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="120dp"
         app:cardCornerRadius="12dp"
-        app:cardBackgroundColor="#2A2A2A"
+        app:cardBackgroundColor="@color/color_border_dark"
         android:layout_marginBottom="16dp">
 
         <ImageView
@@ -50,7 +50,7 @@
         android:layout_width="120dp"
         android:layout_height="120dp"
         app:cardCornerRadius="60dp"
-        app:cardBackgroundColor="#2A2A2A"
+        app:cardBackgroundColor="@color/color_border_dark"
         android:layout_marginBottom="16dp">
 
         <ImageView
@@ -76,7 +76,7 @@
         android:hint="Seu Nome"
         android:textColorHint="#888888"
         android:textColor="#FFFFFF"
-        android:backgroundTint="#2E7D32"
+        android:backgroundTint="@color/color_primary"
         android:padding="12dp"
         android:layout_marginBottom="16dp"/>
 
@@ -87,7 +87,7 @@
         android:hint="Sua Biografia"
         android:textColorHint="#888888"
         android:textColor="#FFFFFF"
-        android:backgroundTint="#2E7D32"
+        android:backgroundTint="@color/color_primary"
         android:padding="12dp"
         android:layout_marginBottom="32dp"/>
 
@@ -96,8 +96,8 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:text="Salvar e Continuar"
-        android:textColor="#000000"
-        app:backgroundTint="#2E7D32"
+        android:textColor="#FFFFFF"
+        app:backgroundTint="@color/color_primary"
         app:cornerRadius="8dp" />
 
 </LinearLayout>

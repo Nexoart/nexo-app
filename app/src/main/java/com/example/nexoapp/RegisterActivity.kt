@@ -25,13 +25,25 @@ class RegisterActivity : AppCompatActivity() {
         val btnRegister = findViewById<Button>(R.id.btnRegister)
 
         btnRegister.setOnClickListener {
-            val name = etName.text.toString()
-            val email = etEmail.text.toString()
-            val password = etPassword.text.toString()
+            val name = etName.text.toString().trim()
+            val email = etEmail.text.toString().trim()
+            val password = etPassword.text.toString().trim()
             val isArtista = switchArtist.isChecked
 
             if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Validação de E-mail
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                Toast.makeText(this, "Por favor, insira um e-mail válido", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Validação de Senha (mínimo de 6 caracteres)
+            if (password.length < 6) {
+                Toast.makeText(this, "A senha deve ter pelo menos 6 caracteres", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -51,19 +63,22 @@ class RegisterActivity : AppCompatActivity() {
                                 apply()
                             }
                             Toast.makeText(this@RegisterActivity, "Cadastro realizado!", Toast.LENGTH_SHORT).show()
-                            val intent = android.content.Intent(this@RegisterActivity, OnboardingActivity::class.java)
+                            val intent = android.content.Intent(this@RegisterActivity, EditProfileActivity::class.java)
+                            intent.putExtra("IS_ONBOARDING", true)
                             startActivity(intent)
                             finish()
                         } else {
                             Toast.makeText(this@RegisterActivity, "Erro: ID ou Token não recebidos do servidor!", Toast.LENGTH_LONG).show()
                         }
                     } else {
-                        Toast.makeText(this@RegisterActivity, "Erro ao cadastrar", Toast.LENGTH_SHORT).show()
+                        // Exibir o erro real retornado pelo servidor
+                        val errorMsg = response.errorBody()?.string() ?: "Erro ao cadastrar"
+                        Toast.makeText(this@RegisterActivity, errorMsg, Toast.LENGTH_LONG).show()
                     }
                 }
 
                 override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                    Toast.makeText(this@RegisterActivity, "Falha na conexão", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@RegisterActivity, "Falha na conexão: ${t.localizedMessage}", Toast.LENGTH_SHORT).show()
                 }
             })
         }

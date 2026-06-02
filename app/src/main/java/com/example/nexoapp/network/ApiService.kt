@@ -11,6 +11,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Headers
 
 // --- AS SUAS DATA CLASSES (Os moldes dos dados) ---
 data class LoginRequest(val email: String, val password: String)
@@ -43,13 +44,19 @@ data class PostBackend(
 data class ComentarioRequest(val autor: String, val texto: String)
 data class ComentarioBackend(val id: Long?, val autor: String, val texto: String)
 
+data class BotpressRequest(val message: String)
+data class BotpressResponse(val responses: List<BotMessage>)
+data class BotMessage(val text: String)
+
 interface ApiService {
 
     // Rota antiga de Login (que você já tinha)
+    @Headers("No-Authentication: true")
     @POST("auth/login")
     fun login(@Body request: LoginRequest): Call<LoginResponse>
 
     // Nova Rota de Cadastro que aponta pro seu Controller do Spring Boot
+    @Headers("No-Authentication: true")
     @POST("auth/register")
     fun registerUser(@Body request: RegisterRequest): Call<LoginResponse>
 
@@ -85,4 +92,8 @@ interface ApiService {
     // Atualizar Perfil do Usuário
     @PUT("users/{id}")
     fun updateUserProfile(@Path("id") userId: Long, @Body user: UserBackend): Call<UserBackend>
+
+    // Rota para o Webhook/API do seu bot no Botpress
+    @POST("https://chat.botpress.cloud/api/v1/bots/f5169dc1-d1c4-4bc4-bda6-8dbf82d3edc9/converse")
+    fun sendMessageToBot(@Body request: BotpressRequest): Call<BotpressResponse>
 }

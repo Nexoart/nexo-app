@@ -109,6 +109,34 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                             likesCount = postBackend.curtidasCount // Dinâmico!
                         )
                     }
+
+                    // Checa estilo escolhido no onboarding/login
+                    val sharedPref = ctx.getSharedPreferences("NexoAppPrefs", android.content.Context.MODE_PRIVATE)
+                    val exploreStyle = sharedPref.getString("EXPLORE_STYLE", null)
+
+                    if (!exploreStyle.isNullOrEmpty()) {
+                        // Consome a preferência para não travar o feed
+                        sharedPref.edit().remove("EXPLORE_STYLE").apply()
+
+                        val tagTextToMatch = when (exploreStyle) {
+                            "2D" -> "#Anime"
+                            "3D" -> "#3D"
+                            "Pixel Art" -> "#PixelArt"
+                            "Concept Art" -> "#ConceptArt"
+                            else -> null
+                        }
+
+                        if (tagTextToMatch != null) {
+                            val filtered = allPosts.filter { post ->
+                                post.caption.contains(tagTextToMatch, ignoreCase = true)
+                            }
+                            postAdapter.updateData(filtered)
+                            selectTagInUI(tagTextToMatch)
+                            view?.findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(R.id.swipeRefreshLayout)?.isRefreshing = false
+                            return
+                        }
+                    }
+
                     postAdapter.updateData(allPosts)
                 } else {
                     Toast.makeText(ctx, "Erro ao carregar posts do Feed", Toast.LENGTH_SHORT).show()
@@ -156,6 +184,27 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     }
                     postAdapter.updateData(filtered)
                 }
+            }
+        }
+    }
+
+    private fun selectTagInUI(tagText: String) {
+        val view = view ?: return
+        val tags = listOf(
+            view.findViewById<android.widget.TextView>(R.id.tagAll),
+            view.findViewById<android.widget.TextView>(R.id.tagConcept),
+            view.findViewById<android.widget.TextView>(R.id.tag3D),
+            view.findViewById<android.widget.TextView>(R.id.tagAnime),
+            view.findViewById<android.widget.TextView>(R.id.tagPixel)
+        )
+        tags.forEach { t ->
+            val match = if (t.id == R.id.tagAll) "Todos" else t.text.toString()
+            if (match.equals(tagText, ignoreCase = true)) {
+                t.setBackgroundResource(R.drawable.bg_tag_selected)
+                t.setTextColor(android.graphics.Color.WHITE)
+            } else {
+                t.setBackgroundResource(R.drawable.bg_tag_unselected)
+                t.setTextColor(android.graphics.Color.parseColor("#888888"))
             }
         }
     }

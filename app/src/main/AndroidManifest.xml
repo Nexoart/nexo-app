@@ -13,6 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Nexoapp">
         <activity android:name=".ChatFakeActivity" />
+        <activity android:name=".ChatAiActivity" />
         <activity android:name=".ArtistProfileActivity" />
         <activity
             android:name=".RegisterActivity"

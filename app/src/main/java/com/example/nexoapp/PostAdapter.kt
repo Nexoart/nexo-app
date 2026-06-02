@@ -153,6 +153,7 @@ class PostAdapter(private var postList: List<Post>) : RecyclerView.Adapter<PostA
         }
 
         holder.rvInlineComments.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(holder.itemView.context)
+        holder.rvInlineComments.isNestedScrollingEnabled = false
         val commentsAdapter = com.example.nexoapp.InlineCommentsAdapter(emptyList()) 
         holder.rvInlineComments.adapter = commentsAdapter
 

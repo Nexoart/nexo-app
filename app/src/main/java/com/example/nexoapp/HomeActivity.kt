@@ -1,9 +1,11 @@
 package com.example.nexoapp
 
 import android.os.Bundle
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class HomeActivity : AppCompatActivity() {
 
@@ -36,6 +38,12 @@ class HomeActivity : AppCompatActivity() {
         }
 
 
+
+        val fabChatbot = findViewById<FloatingActionButton>(R.id.fabChatbot)
+        fabChatbot.setOnClickListener {
+            val intent = Intent(this, ChatAiActivity::class.java)
+            startActivity(intent)
+        }
 
         // Carrega a Home logo ao abrir
         if (savedInstanceState == null) {

@@ -34,14 +34,28 @@ class PortfolioAdapter(private var imagesList: List<String?>) : RecyclerView.Ada
             val dialog = Dialog(context)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
 
-            // Cria uma ImageView no ar
-            val imgView = ImageView(context)
-            Glide.with(context).load(imageUrl).into(imgView)
-            imgView.adjustViewBounds = true
+            // Cria uma ImageView no ar com parâmetros de tamanho explícitos
+            val imgView = ImageView(context).apply {
+                layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
+                scaleType = ImageView.ScaleType.FIT_CENTER
+                adjustViewBounds = true
+            }
 
-            // Coloca a imagem dentro da caixa e deixa o fundo transparente para escurecer a tela
+            // Carrega a imagem com Glide usando placeholder
+            Glide.with(context)
+                .load(imageUrl)
+                .placeholder(R.drawable.marcy)
+                .into(imgView)
+
+            // Coloca a imagem dentro da caixa
             dialog.setContentView(imgView)
-            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            
+            // Deixa o fundo transparente para escurecer a tela de forma elegante
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.argb(200, 0, 0, 0)))
+            dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
 
             // Quando clicar na imagem grande, ela fecha
             imgView.setOnClickListener { dialog.dismiss() }

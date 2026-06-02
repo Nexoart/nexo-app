@@ -22,10 +22,16 @@ object RetrofitClient {
                 val sharedPref = context.getSharedPreferences("NexoAppPrefs", android.content.Context.MODE_PRIVATE)
                 val token = sharedPref.getString("AUTH_TOKEN", null)
                 
-                val requestBuilder = chain.request().newBuilder()
-                if (!token.isNullOrEmpty()) {
+                val request = chain.request()
+                val requestBuilder = request.newBuilder()
+                
+                // Se a requisição contiver o header No-Authentication, nós removemos ele e pulamos a injeção do token
+                if (request.header("No-Authentication") == "true") {
+                    requestBuilder.removeHeader("No-Authentication")
+                } else if (!token.isNullOrEmpty()) {
                     requestBuilder.addHeader("Authorization", "Bearer $token")
                 }
+                
                 chain.proceed(requestBuilder.build())
             }
             .build()
@@ -34,6 +40,15 @@ object RetrofitClient {
             .baseUrl(BASE_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create()) // Transforma JSON em Objeto e vice-versa
+            .build()
+            .create(ApiService::class.java)
+    }
+
+    // Retorna um ApiService limpo (sem cabeçalho de autenticação do backend local) para APIs externas
+    fun getBotpressApiService(): ApiService {
+        return Retrofit.Builder()
+            .baseUrl("https://chat.botpress.cloud/")
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ApiService::class.java)
     }
